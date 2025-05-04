@@ -135,22 +135,43 @@ const Room = () => {
   };
 
   const handleSendMessage = useCallback((data) => {
-    console.log({ send: data })
     socket.emit('chat-message', { data });
   }, [])
 
+  // const handleReceivedMessage = useCallback((data) => {
+  //   setMessages(prev => (
+  //     [...prev,
+  //     {
+  //       user: username === data?.username ? 'You' : data?.username,
+  //       text: data?.data?.text,
+  //       fileName: data?.data?.fileName,
+  //       fileUrl: data?.data?.fileUrl
+  //     }
+  //     ]
+  //   ))
+  // }, [])
+
   const handleReceivedMessage = useCallback((data) => {
-    setMessages(prev => (
-      [...prev,
+    let fileUrl = null;
+
+    const msgData = data?.data?.msgData
+
+    if (msgData?.fileData && msgData?.fileType) {
+      const blob = new Blob([msgData.fileData], { type: msgData.fileType });
+      fileUrl = URL.createObjectURL(blob);
+    }
+
+    setMessages(prev => ([
+      ...prev,
       {
         user: username === data?.username ? 'You' : data?.username,
-        text: data?.data?.text,
-        fileName: data?.data?.fileName,
-        fileUrl: data?.data?.fileUrl
+        text: msgData?.text,
+        fileName: msgData?.fileName,
+        fileUrl: fileUrl
       }
-      ]
-    ))
-  }, [])
+    ]));
+  }, []);
+
 
   useEffect(() => {
     socket.on('chat-message', handleReceivedMessage)

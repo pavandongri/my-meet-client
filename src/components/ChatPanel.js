@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-const ChatPanel = ({ messages = [], onSendMessage }) => {
+const ChatPanel = React.memo(({ messages = [], onSendMessage }) => {
   const [newMessage, setNewMessage] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
   const messagesEndRef = useRef(null);
@@ -16,12 +16,29 @@ const ChatPanel = ({ messages = [], onSendMessage }) => {
       text: newMessage.trim(),
     };
 
+    // if (selectedFile) {
+    //   msgData.fileName = selectedFile.name;
+    //   msgData.fileUrl = URL.createObjectURL(selectedFile);
+    // }
+    
     if (selectedFile) {
-      msgData.fileName = selectedFile.name;
-      msgData.fileUrl = URL.createObjectURL(selectedFile);
+      const reader = new FileReader();
+  
+      reader.onload = () => {
+        const fileBuffer = reader.result;
+  
+        msgData.fileName = selectedFile.name;
+        msgData.fileType = selectedFile.type;
+        msgData.fileData = fileBuffer;
+  
+        onSendMessage({msgData});
+      };
+  
+      reader.readAsArrayBuffer(selectedFile);
+    } else {
+      onSendMessage(msgData);
     }
 
-    onSendMessage(msgData);
     setNewMessage('');
     setSelectedFile(null);
   };
@@ -88,6 +105,6 @@ const ChatPanel = ({ messages = [], onSendMessage }) => {
       </div>
     </div>
   );
-};
+});
 
 export default ChatPanel;

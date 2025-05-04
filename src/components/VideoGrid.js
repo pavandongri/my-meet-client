@@ -6,11 +6,12 @@ import {
   FaMicrophoneSlash,
 } from 'react-icons/fa';
 
-const VideoGrid = ({ participants }) => {
+const VideoGrid = React.memo(({ participants }) => {
+  const reversedParticipants = participants.reverse()
   return (
     <div className="w-full h-full overflow-y-auto p-4 flex justify-center">
       <div className="flex flex-wrap justify-center gap-5 w-full ">
-        {participants.map((participant) => (
+        {reversedParticipants.map((participant) => (
           <div
             key={participant.id + Date.now()}
             className="
@@ -28,7 +29,7 @@ const VideoGrid = ({ participants }) => {
       </div>
     </div>
   );
-};
+});
 
 const VideoPlayer = ({ stream, isLocal }) => {
   const videoRef = useRef();

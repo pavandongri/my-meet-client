@@ -11,11 +11,6 @@ const Home = () => {
   const handleCreateRoom = () => {
     if (!username.trim()) return alert("Enter your name");
     const newRoomId = uuidv4();
-    navigate(`/room/${newRoomId}?name=${encodeURIComponent(username)}`);
-  };
-
-  const handleJoinRoom = () => {
-    if (!roomId.trim() || !username.trim()) return alert("Enter both name and room ID");
     navigate(`/room/${roomId}?name=${encodeURIComponent(username)}`);
   };
 
