@@ -154,7 +154,7 @@ const Room = () => {
   const handleReceivedMessage = useCallback((data) => {
     let fileUrl = null;
 
-    const msgData = data?.data?.msgData
+    const msgData = data?.data
 
     if (msgData?.fileData && msgData?.fileType) {
       const blob = new Blob([msgData.fileData], { type: msgData.fileType });

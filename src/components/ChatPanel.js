@@ -31,7 +31,7 @@ const ChatPanel = React.memo(({ messages = [], onSendMessage }) => {
         msgData.fileType = selectedFile.type;
         msgData.fileData = fileBuffer;
   
-        onSendMessage({msgData});
+        onSendMessage(msgData);
       };
   
       reader.readAsArrayBuffer(selectedFile);
