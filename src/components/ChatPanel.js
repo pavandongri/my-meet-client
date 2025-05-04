@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { toast } from 'react-toastify';
 
 const ChatPanel = React.memo(({ messages = [], onSendMessage }) => {
   const [newMessage, setNewMessage] = useState('');
@@ -20,20 +21,27 @@ const ChatPanel = React.memo(({ messages = [], onSendMessage }) => {
     //   msgData.fileName = selectedFile.name;
     //   msgData.fileUrl = URL.createObjectURL(selectedFile);
     // }
-    
+
     if (selectedFile) {
+      const maxFileSize = 500 * 1024;
+      if (selectedFile.size > maxFileSize) {
+        toast.error("Files with size > 500KB are not allowed", {
+        });
+        return;
+      }
+
       const reader = new FileReader();
-  
+
       reader.onload = () => {
         const fileBuffer = reader.result;
-  
+
         msgData.fileName = selectedFile.name;
         msgData.fileType = selectedFile.type;
         msgData.fileData = fileBuffer;
-  
+
         onSendMessage(msgData);
       };
-  
+
       reader.readAsArrayBuffer(selectedFile);
     } else {
       onSendMessage(msgData);
